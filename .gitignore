@@ -1,6 +1,7 @@
-# Compiled executable
-# Replace 'SoAt' with the name of your binary if it changes
+# Compiled executables
 SoAt
+create_admin
+add_role_column
 *.exe
 *.exe~
 *.dll
@@ -12,7 +13,9 @@ SoAt
 .env.*
 !.env.example
 
-
+# Log files
+*.log
+logs/
 
 # IDE/Editor directories
 .vscode/
@@ -25,3 +28,15 @@ SoAt
 # OS-generated files
 .DS_Store
 Thumbs.db
+
+# Test files
+*.test
+*.out
+coverage.txt
+
+# Temporary files
+tmp/
+temp/
+
+# Docker volumes
+data/

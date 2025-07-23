@@ -15,6 +15,7 @@ type Users struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
+	Role      string    `gorm:"default:'user'" json:"role"` // 'user' or 'admin'
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 

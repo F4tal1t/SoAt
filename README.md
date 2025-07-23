@@ -1,4 +1,4 @@
-# SoAt - Go Web Service
+# SoAt - Go Web Service v0.2
 
 A robust and scalable web service built with Go, containerized with Docker, and backed by PostgreSQL and Redis. This project uses a clean, layered architecture to separate concerns and improve maintainability.
 
@@ -11,6 +11,9 @@ A robust and scalable web service built with Go, containerized with Docker, and 
 - **Relational Database**: Integrates with PostgreSQL for reliable data storage, managed by GORM.
 - **In-Memory Caching**: Utilizes Redis for fast data access and caching.
 - **RESTful API Structure**: Routes are clearly defined and grouped by feature.
+- **JWT Authentication**: Secure authentication using JSON Web Tokens with role-based access control.
+- **Admin Management**: Dedicated utility for creating admin users with elevated privileges.
+- **Robust Error Handling**: Comprehensive error handling throughout the application.
 
 ---
 
@@ -70,13 +73,68 @@ docker compose down -v
 
 You can interact with the running server using any API client. The following examples use `curl`.
 
-### 1. Create a New User
+### Authentication
 
-Send a `POST` request to `/users` with the user's details in the request body.
+#### Register a New User
 
 **Request:**
 ```bash
-curl -X POST http://localhost:3000/users \
+curl -X POST http://localhost:3000/SoAt/auth/register \
+-H "Content-Type: application/json" \
+-d '{
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "securepassword123"
+}'
+```
+
+#### Login
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/SoAt/auth/login \
+-H "Content-Type: application/json" \
+-d '{
+    "email": "john.doe@example.com",
+    "password": "securepassword123"
+}'
+```
+
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "a1b2c3d4-...",
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "role": "user"
+  }
+}
+```
+
+#### Create Admin User
+
+To create an admin user, use the provided utility:
+
+```bash
+go run cmd/create_admin/main.go admin@example.com yourpassword
+```
+
+Or in Docker:
+
+```bash
+docker exec -it soat-soat-1 ./SoAt cmd/create_admin/main.go admin@example.com yourpassword
+```
+
+### User Management
+
+#### Create a New User
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/SoAt/users \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
 -H "Content-Type: application/json" \
 -d '{
     "name": "John Doe",
@@ -88,40 +146,80 @@ curl -X POST http://localhost:3000/users \
 **Expected Response:**
 The server will respond with the newly created user object, including its unique ID and timestamps.
 
-### 2. Get All Users
-
-Send a `GET` request to `/users` to retrieve a list of all users.
+#### Get All Users (Admin Only)
 
 **Request:**
 ```bash
-curl -X GET http://localhost:3000/users
+curl -X GET http://localhost:3000/SoAt/users \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 
 **Expected Response:**
 A JSON array containing all user objects in the database.
 
-### 3. Get a Single User by ID
-
-Send a `GET` request to `/users/{id}`, replacing `{id}` with the actual user ID you want to retrieve.
+#### Get a Single User by ID
 
 **Request:**
 ```bash
 # Replace {user-id} with an actual ID from the GET all users response
-curl -X GET http://localhost:3000/users/{user-id}
+curl -X GET http://localhost:3000/SoAt/users/{user-id}
 ```
 
-### 4. Delete a User by ID
-
-Send a `DELETE` request to `/users/{id}` to remove a specific user.
+#### Delete a User by ID
 
 **Request:**
 ```bash
 # Replace {user-id} with the ID of the user you want to delete
-curl -X DELETE http://localhost:3000/users/{user-id}
+curl -X DELETE http://localhost:3000/SoAt/users/{user-id} \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
 ```
 
 **Expected Response:**
 A success message indicating the user has been deleted.
+
+### Friendships
+
+#### Create a Friendship
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/SoAt/friendships \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "user-uuid-here",
+    "friend_id": "friend-uuid-here"
+}'
+```
+
+#### Get User's Friends
+
+**Request:**
+```bash
+curl -X GET http://localhost:3000/SoAt/friendships/user/{user-id} \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+```
+
+### Posts
+
+#### Create a Post
+
+**Request:**
+```bash
+curl -X POST http://localhost:3000/SoAt/users/{user-id}/posts \
+-H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
+-H "Content-Type: application/json" \
+-d '{
+    "content": "This is my first post!"
+}'
+```
+
+#### Get User's Posts
+
+**Request:**
+```bash
+curl -X GET http://localhost:3000/SoAt/users/{user-id}/posts
+```
 
 ---
 
@@ -147,26 +245,32 @@ The project follows a layered architecture to separate responsibilities:
 .
 ├── cmd/                # Main application entry point
 │   ├── app/
+│   ├── create_admin/   # Admin user creation utility
+│   ├── add_role_column/ # Database migration utility
 │   └── main.go
 ├── controllers/        # Handles HTTP request/response logic
+│   ├── auth/           # Authentication controllers
 │   ├── friendships/
 │   ├── posts/
 │   └── users/
 ├── internals/          # Core shared packages
+│   ├── auth/           # JWT authentication and middleware
 │   ├── cache/          # Redis connection logic
 │   ├── constants/      # Application-wide constants
 │   ├── database/       # PostgreSQL connection logic
 │   ├── dto/            # Data Transfer Objects
 │   ├── notifications/
+│   ├── validator/      # Input validation
 │   └── server/         # HTTP server, handlers, and middleware
 ├── models/             # GORM database models
 │   ├── friendships/
 │   ├── posts/
 │   └── users/
 ├── routes/             # API route definitions
-│   ├── friendships/
-│   ├── posts/
-│   └── users/
+│   ├── auth.go
+│   ├── friendships.go
+│   ├── posts.go
+│   └── users.go
 ├── services/           # Business logic for each feature
 │   ├── friendships/
 │   ├── posts/
@@ -180,6 +284,15 @@ The project follows a layered architecture to separate responsibilities:
 ├── go.sum              # Go module checksums
 └── README.md           # You are here!
 ```
+
+### v0.2 Updates
+
+- Added JWT authentication with role-based access control
+- Fixed issues with user role management
+- Improved error handling and debugging
+- Enhanced Docker configuration for better production readiness
+- Added admin user creation utility
+- Updated API documentation with authentication examples
 
 ---
 

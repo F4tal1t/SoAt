@@ -5,7 +5,7 @@ import (
 	"SoAt/models/users"
 	"context"
 	"fmt"
-	"log"
+
 	"sync"
 
 	"github.com/google/uuid"
@@ -72,7 +72,8 @@ func Hydrate() {
 	us := users.New()
 	usersList, err := us.GetAll(ctx)
 	if err != nil {
-		log.Fatalf("Internal err :%v", err)
+		fmt.Printf("Error hydrating notifications: %v\n", err)
+		return
 	}
 	for _, user := range usersList {
 		Register(user.ID)

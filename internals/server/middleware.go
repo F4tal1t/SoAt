@@ -13,6 +13,7 @@ func Middleware(app *fiber.App) {
 
 func AddRoutes(app *fiber.App) {
 	baseRouter := app.Group("/SoAt")
+	routes.Auth(baseRouter)    // Add auth routes
 	routes.Users(baseRouter)
 	routes.Friendships(baseRouter)
 	routes.Posts(baseRouter)

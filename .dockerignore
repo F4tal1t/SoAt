@@ -4,19 +4,50 @@
 
 # Ignore local environment files (IMPORTANT for security)
 .env
+.env.*
+!.env.example
 
 # Ignore IDE/editor configuration
 .vscode/
 .idea/
+*.suo
+*.user
+*.sln
+*.project
 
 # Ignore Docker-related files
 Dockerfile
 .dockerignore
 docker-compose.yaml
 
-# Ignore the compiled binary (it will be built inside the container)
+# Ignore compiled binaries (they will be built inside the container)
 SoAt
+create_admin
+add_role_column
+*.exe
+
+# Ignore test files
+*.test
+*.out
+coverage.txt
+
+# Ignore log files
+*.log
+logs/
+
+# Ignore temporary files
+tmp/
+temp/
 
 # Ignore OS-specific files
 .DS_Store
 Thumbs.db
+
+# Ignore documentation and assets not needed for build
+README.md
+LICENSE
+assets/
+docs/
+
+# Ignore data directories
+data/

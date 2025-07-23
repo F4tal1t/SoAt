@@ -1,6 +1,7 @@
 package users
 
 import (
+	"SoAt/internals/auth"
 	"SoAt/internals/dto"
 	"SoAt/internals/notifications"
 	"SoAt/internals/validator"
@@ -24,11 +25,17 @@ func Add(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(err)
 	}
 
+	// Hash the password
+	hashedPassword, err := auth.HashPassword(user.Password)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON("Failed to hash password")
+	}
+
 	us := users.New()
 	us.User = &dto.User{}
 	us.User.Name = user.Name
 	us.User.Email = user.Email
-	us.User.Password = user.Password
+	us.User.Password = hashedPassword
 
 	us.Create(ctx)
 
