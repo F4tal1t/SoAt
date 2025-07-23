@@ -1,0 +1,27 @@
+# Compiled executable
+# Replace 'SoAt' with the name of your binary if it changes
+SoAt
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+
+
+# IDE/Editor directories
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln
+*.project
+
+# OS-generated files
+.DS_Store
+Thumbs.db

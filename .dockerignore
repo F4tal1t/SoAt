@@ -1,0 +1,22 @@
+# Ignore version control files
+.git
+.gitignore
+
+# Ignore local environment files (IMPORTANT for security)
+.env
+
+# Ignore IDE/editor configuration
+.vscode/
+.idea/
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
+docker-compose.yaml
+
+# Ignore the compiled binary (it will be built inside the container)
+SoAt
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
