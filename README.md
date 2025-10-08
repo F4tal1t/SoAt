@@ -4,7 +4,7 @@ A robust and scalable web service built with Go, containerized with Docker, and 
 
 ---
 
-## ✨ Features
+## Features
 
 - **Layered Go Backend**: High-performance backend organized by features (Users, Posts, Friendships) across controllers, services, and models.
 - **Containerized Environment**: Uses Docker and Docker Compose for consistent development, testing, and production environments.
@@ -17,7 +17,7 @@ A robust and scalable web service built with Go, containerized with Docker, and 
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have the following installed on your local machine:
 
@@ -26,7 +26,7 @@ Before you begin, ensure you have the following installed on your local machine:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to get your development environment up and running.
 
@@ -69,7 +69,7 @@ docker compose down -v
 ```
 ---
 
-## 🚀 API Usage Examples
+## API Usage Examples
 
 You can interact with the running server using any API client. The following examples use `curl`.
 
@@ -237,7 +237,7 @@ curl -X GET http://localhost:3000/SoAt/users/{user-id}/posts
 ![Docker Desktop for checking logs](assets/images/S4.png)
 ### <b>Docker Desktop Interface<b>
 
-## 📂 Project Structure
+## Project Structure
 
 The project follows a layered architecture to separate responsibilities:
 
