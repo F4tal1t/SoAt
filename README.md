@@ -3,13 +3,12 @@
 A robust and scalable web service built with Go, containerized with Docker, and backed by PostgreSQL and Redis. This project uses a clean, layered architecture to separate concerns and improve maintainability.
 
 ## List of Contents
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#features"  >Features</a>
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#prerequisites"  >Prerequisites</a>
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#getting-started"  >Getting Started</a>
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#api-usage-examples"  >API Usage Examples</a>
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#screenshots"  >Screenshots</a>
-- <a href="https://github.com/F4tal1t/SoAt/main/README.md#project-structure"  >Project Structure</a>
----
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [API Usage Examples](#api-usage-examples)
+- [Screenshots](#screenshots)
+- [Project Structure](#project-structure)
 
 ## Features
 
